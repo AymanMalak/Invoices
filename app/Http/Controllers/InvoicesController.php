@@ -5,11 +5,18 @@ namespace App\Http\Controllers;
 use App\invoices;
 use App\invoices_details;
 use App\invoice_attachments;
+use App\Mail\AddInvoice ;
 use App\sections;
+use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+// use App\Notifications\addInvoice;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Mail\Mailable;
+// use App\Mail\AddInvoice;
 
 class InvoicesController extends Controller
 {
@@ -100,6 +107,10 @@ class InvoicesController extends Controller
         }
 
         session()->flash('add_invoice', 'Invoice Added Successfully');
+
+        $email = Auth::user()->email;
+
+        Mail::to($email)->send(new AddInvoice($email));
 
         return back();
     }
